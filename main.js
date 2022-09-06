@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { render } from "./src/helpers/render";
 import { formatGasUsed } from "./src/helpers/format-gas-used";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
+import { calcMedian } from "./src/helpers/calc-median";
 
 import { hero } from "./src/ui/hero";
 import { link } from "./src/ui/link";
@@ -56,6 +57,93 @@ const process = async () => {
     allContent += descriptionItem({ title, description });
   });
   render(".js-content", allContent);
+
+  // Transactions
+  // ---------------------------------
+
+  const transactionList = [];
+
+  // Gas pagado mas alto
+  let highestPaidGas = 0;
+  let numberOfTransactions = 3; // Limit it to 10 transactions
+  for (const transaction of block.transactions) {
+    if (numberOfTransactions === 0) {
+      break;
+    }
+    const transactionInfo = await provider.getTransaction(transaction);
+
+    if (transactionInfo.gasPrice.toNumber() > highestPaidGas) {
+      highestPaidGas = transactionInfo.gasPrice.toNumber();
+    }
+
+    numberOfTransactions--;
+  }
+  transactionList.push({
+    description: highestPaidGas,
+    title: "Gas pagado más alto",
+  });
+
+  // Gas pagado mas bajo
+  let lowestPaidGas = block.gasLimit.toNumber();
+  numberOfTransactions = 3; // Limit it to 10 transactions
+  for (const transaction of block.transactions) {
+    if (numberOfTransactions === 0) {
+      break;
+    }
+    const transactionInfo = await provider.getTransaction(transaction);
+
+    if (
+      lowestPaidGas > 0 &&
+      transactionInfo.gasPrice.toNumber() < lowestPaidGas
+    ) {
+      lowestPaidGas = transactionInfo.gasPrice.toNumber();
+    }
+
+    numberOfTransactions--;
+  }
+  transactionList.push({
+    description: lowestPaidGas,
+    title: "Gas pagado más bajo",
+  });
+
+  // Mean gas price
+  numberOfTransactions = 3; // Limit it to 10 transactions
+  let totalPaidGas = 0;
+  for (const transaction of block.transactions) {
+    if (numberOfTransactions === 0) {
+      break;
+    }
+    const transactionInfo = await provider.getTransaction(transaction);
+    totalPaidGas += transactionInfo.gasPrice.toNumber();
+
+    numberOfTransactions--;
+  }
+  numberOfTransactions = 3; // Limit it to 10 transactions
+  const paidGasMean = totalPaidGas / numberOfTransactions;
+  transactionList.push({
+    description: paidGasMean,
+    title: "Promedio",
+  });
+
+  // Median gas price
+  numberOfTransactions = 3; // Limit it to 10 transactions
+  const gasPricesList = [];
+  for (const transaction of block.transactions) {
+    if (numberOfTransactions === 0) {
+      break;
+    }
+    const transactionInfo = await provider.getTransaction(transaction);
+    gasPricesList.push(transactionInfo.gasPrice.toNumber());
+
+    numberOfTransactions--;
+  }
+  const paidGasMedian = calcMedian(gasPricesList);
+  transactionList.push({
+    description: paidGasMedian,
+    title: "Media",
+  });
+
+  console.log(transactionList);
 };
 
 process();
