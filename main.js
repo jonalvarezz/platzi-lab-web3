@@ -6,6 +6,7 @@ import { formatGasUsed } from "./src/helpers/format-gas-used";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
 
 import { hero } from "./src/ui/hero";
+import { link } from "./src/ui/link";
 import { descriptionItem } from "./src/ui/description-item";
 
 const process = async () => {
@@ -33,7 +34,13 @@ const process = async () => {
   // ---------------------------------
   const list = [
     { description: block.hash, title: "Hash" },
-    { description: block.miner, title: "Minado por" },
+    {
+      description: link({
+        children: block.miner,
+        href: `https://etherscan.io/address/${block.miner}`,
+      }),
+      title: "Minado por",
+    },
     { description: block.nonce, title: "Nonce" },
     { description: block.parentHash, title: "Hash padre" },
     {
