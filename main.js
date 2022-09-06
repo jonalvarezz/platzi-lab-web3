@@ -2,6 +2,9 @@ import "./style.css";
 import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
+import { formatGasUsed } from "./src/helpers/format-gas-used";
+import { formatTimestamp } from "./src/helpers/format-timestamp";
+
 import { hero } from "./src/ui/hero";
 import { descriptionItem } from "./src/ui/description-item";
 
@@ -33,8 +36,11 @@ const process = async () => {
     { description: block.miner, title: "Minado por" },
     { description: block.nonce, title: "Nonce" },
     { description: block.parentHash, title: "Hash padre" },
-    { description: block.gasUsed, title: "Gas usado" },
-    { description: block.timestamp, title: "Timestamp" },
+    {
+      description: formatGasUsed(block.gasUsed, block.gasLimit),
+      title: "Gas usado",
+    },
+    { description: formatTimestamp(block.timestamp), title: "Timestamp" },
   ];
 
   // @todo: Optimize
