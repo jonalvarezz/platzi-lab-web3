@@ -69,7 +69,7 @@ const process = async () => {
     },
   ];
 
-  // Gas pagado mas alto
+  // Precio del gas mas alto
   let highestPaidGas = 0;
   let numberOfTransactions = 3; // Limit it to 10 transactions
   for (const transaction of block.transactions) {
@@ -86,10 +86,10 @@ const process = async () => {
   }
   transactionList.push({
     description: formatGwei(highestPaidGas),
-    title: "Gas pagado más alto",
+    title: "Precio del gas más alto",
   });
 
-  // Gas pagado mas bajo
+  // Precio del gas mas bajo
   let lowestPaidGas = block.gasLimit.toNumber();
   numberOfTransactions = 3; // Limit it to 10 transactions
   for (const transaction of block.transactions) {
@@ -109,7 +109,7 @@ const process = async () => {
   }
   transactionList.push({
     description: formatGwei(lowestPaidGas),
-    title: "Gas pagado más bajo",
+    title: "Precio del gas más bajo",
   });
 
   // Median gas price
