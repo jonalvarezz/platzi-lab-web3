@@ -16,10 +16,17 @@ const process = async () => {
     ? new ethers.providers.Web3Provider(window.ethereum)
     : new ethers.providers.CloudflareProvider();
 
-  const networkInfo = await provider.getNetwork();
+  const maybeBlockNumber = window.location.pathname.split("/")[1];
 
-  const blockNumber = await provider.getBlockNumber();
-  const block = await provider.getBlock(blockNumber);
+  const blockToQuery = isNaN(parseInt(maybeBlockNumber, 10))
+    ? "latest"
+    : parseInt(maybeBlockNumber);
+
+  let block = await provider.getBlock(blockToQuery);
+
+  const blockNumber = block.number;
+
+  const networkInfo = await provider.getNetwork();
 
   // Hero
   // ---------------------------------
