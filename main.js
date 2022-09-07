@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
 import { formatGasUsed } from "./src/helpers/format-gas-used";
+import { formatGwei } from "./src/helpers/format-gwei";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
 import { calcMedian } from "./src/helpers/calc-median";
 
@@ -61,7 +62,12 @@ const process = async () => {
   // Transactions
   // ---------------------------------
 
-  const transactionList = [];
+  const transactionList = [
+    {
+      title: "Número de transacciones",
+      description: block.transactions.length,
+    },
+  ];
 
   // Gas pagado mas alto
   let highestPaidGas = 0;
@@ -79,7 +85,7 @@ const process = async () => {
     numberOfTransactions--;
   }
   transactionList.push({
-    description: highestPaidGas,
+    description: formatGwei(highestPaidGas),
     title: "Gas pagado más alto",
   });
 
@@ -102,27 +108,8 @@ const process = async () => {
     numberOfTransactions--;
   }
   transactionList.push({
-    description: lowestPaidGas,
+    description: formatGwei(lowestPaidGas),
     title: "Gas pagado más bajo",
-  });
-
-  // Mean gas price
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  let totalPaidGas = 0;
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-    totalPaidGas += transactionInfo.gasPrice.toNumber();
-
-    numberOfTransactions--;
-  }
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  const paidGasMean = totalPaidGas / numberOfTransactions;
-  transactionList.push({
-    description: paidGasMean,
-    title: "Promedio",
   });
 
   // Median gas price
@@ -139,11 +126,16 @@ const process = async () => {
   }
   const paidGasMedian = calcMedian(gasPricesList);
   transactionList.push({
-    description: paidGasMedian,
+    description: formatGwei(paidGasMedian),
     title: "Media",
   });
 
-  console.log(transactionList);
+  // @todo: Optimize
+  let transactionsContent = "";
+  transactionList.forEach(({ title, description }) => {
+    transactionsContent += descriptionItem({ title, description });
+  });
+  render(".js-tx-content", transactionsContent);
 };
 
 process();
