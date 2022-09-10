@@ -7,7 +7,8 @@ import { formatGwei } from "./src/helpers/format-gwei";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
 import { calcMedian } from "./src/helpers/calc-median";
 
-import { hero } from "./src/views/hero";
+import { contentBlock } from "./src/views/content-block";
+import { contentHeading } from "./src/views/content-heading";
 import { link } from "./src/views/link";
 import { nav } from "./src/views/nav";
 import { descriptionItem } from "./src/views/description-item";
@@ -29,23 +30,22 @@ const process = async () => {
 
   const networkInfo = await provider.getNetwork();
 
+  // ---------------------------------
   // Navigation
   // ---------------------------------
-  render(".js-navigation", nav({ block }));
+  render(".js--navigation", nav({ block }));
 
-  // Hero
   // ---------------------------------
-  render(
-    ".js-hero",
-    hero({
-      block: blockNumber,
-      network: networkInfo.name,
-      networkEnsAddress: networkInfo.ensAddress,
-    })
-  );
+  // Content block: Block info
+  // ---------------------------------
 
-  // Content
-  // ---------------------------------
+  const heading = contentHeading({
+    title: blockNumber,
+    description: `Bloque de la cadena Ethereum en la red "${networkInfo.name}". Dirección ENS
+  "${networkInfo.ensAddress}"`,
+  });
+
+  // content list
   const list = [
     { description: block.hash, title: "Hash" },
     {
@@ -69,9 +69,17 @@ const process = async () => {
   list.forEach(({ title, description }) => {
     allContent += descriptionItem({ title, description });
   });
-  render(".js-content", allContent);
 
-  // Transactions
+  const blockInfo = contentBlock({
+    name: "block-info",
+    heading,
+    listItems: allContent,
+  });
+
+  render(".js--block-info", blockInfo);
+
+  // ---------------------------------
+  // Content block: Transactions
   // ---------------------------------
 
   const transactionList = [
@@ -147,7 +155,17 @@ const process = async () => {
   transactionList.forEach(({ title, description }) => {
     transactionsContent += descriptionItem({ title, description });
   });
-  render(".js-tx-content", transactionsContent);
+
+  const transactions = contentBlock({
+    name: "transactions",
+    heading: contentHeading({
+      title: "Transacciones",
+      description: `Transacciones en el bloque ${blockNumber}`,
+    }),
+    listItems: transactionsContent,
+  });
+
+  render(".js--block-transactions", transactions);
 };
 
 process();
