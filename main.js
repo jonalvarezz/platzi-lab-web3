@@ -1,4 +1,3 @@
-import "./style.css";
 import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
