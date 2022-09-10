@@ -17,7 +17,7 @@
     />
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body>
+  <body class="text-gray-500">
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
         class="flex items-baseline justify-between border-b border-gray-200 pt-16 pb-6"
@@ -26,38 +26,14 @@
           🐥 Block Explorer
         </h1>
 
-        <div class="flex items-center js--navigation">
-          <button
-            type="button"
-            class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7 flex items-center"
-          >
-            <svg
-              class="h-5 w-5 pr-1"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 19.5L8.25 12l7.5-7.5"
-              />
-            </svg>
-            <span class="">Bloque Anterior</span>
-          </button>
-
-          <button
-            type="button"
-            class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7 flex items-center"
-          >
-            <span class="">Último</span>
-          </button>
-        </div>
+        <div class="flex items-center js--navigation"></div>
       </div>
 
-      <div class="js--block-info"></div>
+      <div class="js--block-info">
+        <div class="animate-pulse pt-72 flex justify-center items-center">
+          <span>Cargando...</span>
+        </div>
+      </div>
       <div class="js--block-transactions"></div>
     </main>
 
