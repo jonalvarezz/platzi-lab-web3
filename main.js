@@ -7,10 +7,10 @@ import { formatGwei } from "./src/helpers/format-gwei";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
 import { calcMedian } from "./src/helpers/calc-median";
 
-import { hero } from "./src/ui/hero";
-import { link } from "./src/ui/link";
-import { nav } from "./src/ui/nav";
-import { descriptionItem } from "./src/ui/description-item";
+import { hero } from "./src/views/hero";
+import { link } from "./src/views/link";
+import { nav } from "./src/views/nav";
+import { descriptionItem } from "./src/views/description-item";
 
 const process = async () => {
   const provider = window.ethereum
