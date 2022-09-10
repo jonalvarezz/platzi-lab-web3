@@ -9,6 +9,7 @@ import { calcMedian } from "./src/helpers/calc-median";
 
 import { hero } from "./src/ui/hero";
 import { link } from "./src/ui/link";
+import { nav } from "./src/ui/nav";
 import { descriptionItem } from "./src/ui/description-item";
 
 const process = async () => {
@@ -27,6 +28,10 @@ const process = async () => {
   const blockNumber = block.number;
 
   const networkInfo = await provider.getNetwork();
+
+  // Navigation
+  // ---------------------------------
+  render(".js-navigation", nav({ block }));
 
   // Hero
   // ---------------------------------
