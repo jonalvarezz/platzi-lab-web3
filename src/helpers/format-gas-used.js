@@ -10,6 +10,7 @@ const getPercentage = (value, total) => {
  * @param {import("ethers").BigNumber} gasUsed
  * @param {import("ethers").BigNumber} gasLimit
  * @returns String
+ *
  * @example
  * const gasUsed = 1000000;
  * const gasLimit = 10000000;

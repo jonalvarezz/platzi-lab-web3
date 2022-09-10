@@ -1,7 +1,7 @@
 /**
  *
- * @param {Number} number
- * @returns String
+ * @param {number} number
+ * @returns string
  * @example
  * const number = 1000000;
  * const formattedNumber = formatNumber(number);

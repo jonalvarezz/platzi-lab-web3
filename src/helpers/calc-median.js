@@ -1,7 +1,8 @@
 /**
  * Calculates the median of an array of numbers
- * @param {Array} list List of numbers
- * @returns Number
+ *
+ * @param {Array} list - List of numbers
+ * @returns number
  */
 export function calcMedian(list) {
   if (list.length === 0) {

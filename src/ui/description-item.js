@@ -2,9 +2,9 @@
  *
  * Creates the markup of our description item
  *
- * @param Properties
- * @param Properties.title `string` The title of the item
- * @param Properties.description `string` The description of the item
+ * @param {Object} props
+ * @param {string} props.title - The title of the item
+ * @param {string} props.description - The description of the item
  * @returns String
  */
 export function descriptionItem({ title = "", description = "" }) {

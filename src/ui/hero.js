@@ -2,13 +2,13 @@
  *
  * Creates the markup of our hero component
  *
- * @param Properties
- * @param Properties.block `string` | `number` Block number
- * @param Properties.network `string` The network's name
- * @param Properties.networkEnsAddress `string` The network's ENS address
+ * @param {Object} props
+ * @param {string | number} props.block - Block number
+ * @param {string} props.network - The network's name
+ * @param {string} props.networkEnsAddress - The network's ENS address
  * @returns String
  */
-export function hero({ block = "", network = "", networkEnsAddress = "" }) {
+export function hero({ block = 0, network = "", networkEnsAddress = "" }) {
   return `
 <h2 class="text-3xl text-center font-bold tracking-tight text-gray-900 sm:text-7xl">
   ${block}
