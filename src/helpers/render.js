@@ -14,4 +14,6 @@ export function render(selector, content) {
   }
 
   element.innerHTML = content;
+
+  return element;
 }
