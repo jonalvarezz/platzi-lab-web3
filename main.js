@@ -120,6 +120,13 @@ ${buttonStr}
   // Content block: Transactions
   // ---------------------------------
 
+  let numberOfTransactions = 3; // Limit it to 10 transactions
+  const transactionPromises = block.transactions
+    .filter((_, index) => index < numberOfTransactions)
+    .map((tx) => provider.getTransaction(tx));
+
+  const resolvedTransactions = await Promise.all(transactionPromises);
+
   const transactionList = [
     {
       title: "Número de transacciones",
@@ -129,18 +136,10 @@ ${buttonStr}
 
   // Precio del gas mas alto
   let highestPaidGas = 0;
-  let numberOfTransactions = 3; // Limit it to 10 transactions
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-
+  for (const transactionInfo of resolvedTransactions) {
     if (transactionInfo.gasPrice.toNumber() > highestPaidGas) {
       highestPaidGas = transactionInfo.gasPrice.toNumber();
     }
-
-    numberOfTransactions--;
   }
   transactionList.push({
     description: formatGwei(highestPaidGas),
@@ -149,21 +148,13 @@ ${buttonStr}
 
   // Precio del gas mas bajo
   let lowestPaidGas = block.gasLimit.toNumber();
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-
+  for (const transactionInfo of resolvedTransactions) {
     if (
       lowestPaidGas > 0 &&
       transactionInfo.gasPrice.toNumber() < lowestPaidGas
     ) {
       lowestPaidGas = transactionInfo.gasPrice.toNumber();
     }
-
-    numberOfTransactions--;
   }
   transactionList.push({
     description: formatGwei(lowestPaidGas),
@@ -173,14 +164,8 @@ ${buttonStr}
   // Median gas price
   numberOfTransactions = 3; // Limit it to 10 transactions
   const gasPricesList = [];
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
+  for (const transactionInfo of resolvedTransactions) {
     gasPricesList.push(transactionInfo.gasPrice.toNumber());
-
-    numberOfTransactions--;
   }
   const paidGasMedian = calcMedian(gasPricesList);
   transactionList.push({
