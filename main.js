@@ -135,15 +135,20 @@ ${buttonStr}
   ];
 
   // Precio del gas mas alto
-  const gasPrices = resolvedTransactions.map((tx) => tx.gasPrice.toNumber());
-  const highestPaidGas = window.Math.max(...gasPrices);
+  const transactionsSortedByGasPrice = resolvedTransactions.sort(
+    (a, b) => b.gasPrice.toNumber() - a.gasPrice.toNumber()
+  );
+  const highestPaidGas = transactionsSortedByGasPrice[0].gasPrice.toNumber();
   transactionList.push({
     description: formatGwei(highestPaidGas),
     title: "Precio del gas más alto",
   });
 
   // Precio del gas mas bajo
-  const lowestPaidGas = window.Math.min(...gasPrices);
+  const lowestPaidGas =
+    transactionsSortedByGasPrice[
+      transactionsSortedByGasPrice.length - 1
+    ].gasPrice.toNumber();
   transactionList.push({
     description: formatGwei(lowestPaidGas),
     title: "Precio del gas más bajo",
