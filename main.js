@@ -31,6 +31,8 @@ const process = async () => {
 
   const networkInfo = await provider.getNetwork();
 
+  const startTime = performance.now();
+
   // ---------------------------------
   // Header
   // ---------------------------------
@@ -201,6 +203,9 @@ ${buttonStr}
   });
 
   render(".js--block-transactions", transactions);
+
+  const elapsedTime = performance.now() - startTime;
+  console.log(`[ app ] Rendered in ${elapsedTime}ms`);
 };
 
 process();
