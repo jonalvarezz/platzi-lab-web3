@@ -17,13 +17,13 @@
     />
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body class="text-gray-500">
+  <body class="text-gray-500 flex flex-col min-h-screen">
     <header
-      class="mx-auto max-w-7xl flex justify-between items-center text-sm py-4 px-4 sm:px-6 lg:px-8 js--header"
+      class="w-full mx-auto max-w-7xl flex justify-between items-center text-sm py-4 px-4 sm:px-6 lg:px-8 js--header"
     >
       <div class="h-7"></div>
     </header>
-    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <main class="w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
         class="flex items-baseline justify-between border-b border-gray-200 pt-12 pb-6"
       >
@@ -41,6 +41,22 @@
       </div>
       <div class="js--block-transactions"></div>
     </main>
+
+    <footer class="w-full text-center mt-auto p-6 text-sm text-gray-500">
+      <p>
+        Made by
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://twitter.com/jonalvarezz"
+          >@jonalvarezz 🦑</a
+        >
+        for
+        <a target="_blank" rel="noreferrer" href="https://twitter.com/platzi"
+          >@platzi</a
+        >
+      </p>
+    </footer>
 
     <script type="module" src="/main.js"></script>
   </body>
