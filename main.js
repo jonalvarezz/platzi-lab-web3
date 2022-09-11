@@ -101,16 +101,15 @@ ${buttonStr}
     { description: formatTimestamp(block.timestamp), title: "Timestamp" },
   ];
 
-  // @todo: Optimize
-  let allContent = "";
+  let blockContent = "";
   list.forEach(({ title, description }) => {
-    allContent += descriptionItem({ title, description });
+    blockContent += descriptionItem({ title, description });
   });
 
   const blockInfo = contentBlock({
     name: "block-info",
     heading,
-    listItems: allContent,
+    listItems: blockContent,
   });
 
   render(".js--block-info", blockInfo);
@@ -187,7 +186,6 @@ ${buttonStr}
     title: "Media",
   });
 
-  // @todo: Optimize
   let transactionsContent = "";
   transactionList.forEach(({ title, description }) => {
     transactionsContent += descriptionItem({ title, description });
