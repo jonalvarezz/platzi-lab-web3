@@ -2,18 +2,24 @@
  * Calculates the median of an array of numbers
  *
  * @param {Array} list - List of numbers
+ * @param {Object} options
+ * @param {Object} options.sort - Whether to sort the list or not
+ * @param {Object} options.valueResolver - A function that returns the value to be used for the calculation
  * @returns number
  */
-export function calcMedian(list) {
+export function calcMedian(
+  list,
+  { sorted = false, valueResolver = (item) => item } = {}
+) {
   if (list.length === 0) {
     return 0;
   }
 
-  list.sort((a, b) => a - b);
+  const values = sorted ? list : [...list].sort((a, b) => a - b);
 
-  const half = Math.floor(list.length / 2);
+  const half = Math.floor(values.length / 2);
 
-  if (list.length % 2) return list[half];
+  if (values.length % 2) return valueResolver(values[half]);
 
-  return (list[half - 1] + list[half]) / 2.0;
+  return (valueResolver(values[half - 1]) + valueResolver(values[half])) / 2.0;
 }

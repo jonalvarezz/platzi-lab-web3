@@ -155,12 +155,10 @@ ${buttonStr}
   });
 
   // Median gas price
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  const gasPricesList = [];
-  for (const transactionInfo of resolvedTransactions) {
-    gasPricesList.push(transactionInfo.gasPrice.toNumber());
-  }
-  const paidGasMedian = calcMedian(gasPricesList);
+  const paidGasMedian = calcMedian(transactionsSortedByGasPrice, {
+    sorted: true,
+    valueResolver: (item) => item.gasPrice.toNumber(),
+  });
   transactionList.push({
     description: formatGwei(paidGasMedian),
     title: "Media",
