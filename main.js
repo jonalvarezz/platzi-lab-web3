@@ -103,10 +103,9 @@ ${buttonStr}
     { description: formatTimestamp(block.timestamp), title: "Timestamp" },
   ];
 
-  let blockContent = "";
-  list.forEach(({ title, description }) => {
-    blockContent += descriptionItem({ title, description });
-  });
+  const blockContent = list
+    .map(({ title, description }) => descriptionItem({ title, description }))
+    .join("");
 
   const blockInfo = contentBlock({
     name: "block-info",
@@ -164,10 +163,9 @@ ${buttonStr}
     title: "Media",
   });
 
-  let transactionsContent = "";
-  transactionList.forEach(({ title, description }) => {
-    transactionsContent += descriptionItem({ title, description });
-  });
+  const transactionsContent = transactionList
+    .map(({ title, description }) => descriptionItem({ title, description }))
+    .join("");
 
   const transactions = contentBlock({
     name: "transactions",
