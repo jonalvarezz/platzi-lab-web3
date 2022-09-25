@@ -20,3 +20,13 @@ export const getModel = async (blockNumber = "latest") => {
 
   return block;
 };
+
+export const getTransactions = async ({ limit } = { limit: 3 }) => {
+  const _block = await getModel();
+
+  const transactionPromises = _block.transactions
+    .filter((_, index) => index < limit)
+    .map((tx) => provider.getTransaction(tx));
+
+  return Promise.all(transactionPromises);
+};

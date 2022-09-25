@@ -1,16 +1,11 @@
 import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
-import { formatGwei } from "./src/helpers/format-gwei";
-import { calcMedian } from "./src/helpers/calc-median";
-
-import { contentBlock } from "./src/views/content-block";
-import { contentHeading } from "./src/views/content-heading";
 import { nav } from "./src/views/nav";
-import { descriptionItem } from "./src/views/description-item";
 
 import { Header } from "./src/controllers/header.controller";
 import { Block } from "./src/controllers/block.controller";
+import { Transactions } from "./src/controllers/transactions.controller";
 
 const process = async () => {
   const provider = window.ethereum
@@ -24,8 +19,6 @@ const process = async () => {
     : parseInt(maybeBlockNumber);
 
   let block = await provider.getBlock(blockToQuery);
-
-  const blockNumber = block.number;
 
   const startTime = performance.now();
 
@@ -51,64 +44,8 @@ const process = async () => {
   // Content block: Transactions
   // ---------------------------------
 
-  let numberOfTransactions = 3; // Limit it to 10 transactions
-  const transactionPromises = block.transactions
-    .filter((_, index) => index < numberOfTransactions)
-    .map((tx) => provider.getTransaction(tx));
-
-  const resolvedTransactions = await Promise.all(transactionPromises);
-
-  const transactionList = [
-    {
-      title: "Número de transacciones",
-      description: block.transactions.length,
-    },
-  ];
-
-  // Precio del gas mas alto
-  const transactionsSortedByGasPrice = resolvedTransactions.sort(
-    (a, b) => b.gasPrice.toNumber() - a.gasPrice.toNumber()
-  );
-  const highestPaidGas = transactionsSortedByGasPrice[0].gasPrice.toNumber();
-  transactionList.push({
-    description: formatGwei(highestPaidGas),
-    title: "Precio del gas más alto",
-  });
-
-  // Precio del gas mas bajo
-  const lowestPaidGas =
-    transactionsSortedByGasPrice[
-      transactionsSortedByGasPrice.length - 1
-    ].gasPrice.toNumber();
-  transactionList.push({
-    description: formatGwei(lowestPaidGas),
-    title: "Precio del gas más bajo",
-  });
-
-  // Median gas price
-  const paidGasMedian = calcMedian(transactionsSortedByGasPrice, {
-    sorted: true,
-    valueResolver: (item) => item.gasPrice.toNumber(),
-  });
-  transactionList.push({
-    description: formatGwei(paidGasMedian),
-    title: "Media",
-  });
-
-  const transactionsContent = transactionList
-    .map(({ title, description }) => descriptionItem({ title, description }))
-    .join("");
-
-  const transactions = contentBlock({
-    name: "transactions",
-    heading: contentHeading({
-      title: "Transacciones",
-      description: `Transacciones en el bloque ${blockNumber}`,
-    }),
-    listItems: transactionsContent,
-  });
-
-  render(".js--block-transactions", transactions);
+  const transactions = new Transactions(".js--block-transactions");
+  await transactions.init();
 
   const elapsedTime = performance.now() - startTime;
   console.log(`[ app ] Rendered in ${elapsedTime}ms`);
