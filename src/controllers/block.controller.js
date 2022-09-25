@@ -2,6 +2,8 @@ import { render } from "../helpers/render";
 import { formatGasUsed } from "../helpers/format-gas-used";
 import { formatTimestamp } from "../helpers/format-timestamp";
 
+import { Controller } from "./_abstract.controller";
+
 import * as network from "../models/network.model";
 import * as block from "../models/block.model";
 
@@ -10,13 +12,9 @@ import { contentHeading } from "../views/content-heading";
 import { link } from "../views/link";
 import { descriptionItem } from "../views/description-item";
 
-export class Block {
+export class Block extends Controller {
   network = null;
   block = null;
-
-  constructor(element) {
-    this.element = element;
-  }
 
   async init() {
     this.network = await network.getModel();

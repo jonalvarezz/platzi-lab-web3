@@ -2,20 +2,17 @@ import { render } from "../helpers/render";
 import { formatGwei } from "../helpers/format-gwei";
 import { calcMedian } from "../helpers/calc-median";
 
+import { Controller } from "./_abstract.controller";
+
 import * as block from "../models/block.model";
 
 import { contentBlock } from "../views/content-block";
 import { contentHeading } from "../views/content-heading";
 import { descriptionItem } from "../views/description-item";
 
-export class Transactions {
-  element = null;
+export class Transactions extends Controller {
   block = null;
   transactions = null;
-
-  constructor(element) {
-    this.element = element;
-  }
 
   async init() {
     this.block = await block.getModel();

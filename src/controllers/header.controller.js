@@ -4,19 +4,16 @@ import { render } from "../helpers/render";
 import { shortenAddress } from "../helpers/shorten-address";
 import { isMetaMask } from "../helpers/is-metamask";
 
+import { Controller } from "./_abstract.controller";
+
 import * as network from "../models/network.model";
 import { button } from "../views/button";
 
 import { provider } from "../services/provider.service";
 
-export class Header {
+export class Header extends Controller {
   network = null;
-
   account = null;
-
-  constructor(element) {
-    this.element = element;
-  }
 
   async init() {
     this.network = await network.getModel();
