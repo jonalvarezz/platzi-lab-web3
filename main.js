@@ -1,25 +1,9 @@
-import { ethers } from "ethers";
-
-import { render } from "./src/helpers/render";
-import { nav } from "./src/views/nav";
-
 import { Header } from "./src/controllers/header.controller";
 import { Block } from "./src/controllers/block.controller";
+import { Navigation } from "./src/controllers/navigation.controller";
 import { Transactions } from "./src/controllers/transactions.controller";
 
 const process = async () => {
-  const provider = window.ethereum
-    ? new ethers.providers.Web3Provider(window.ethereum)
-    : new ethers.providers.CloudflareProvider();
-
-  const maybeBlockNumber = window.location.pathname.split("/")[1];
-
-  const blockToQuery = isNaN(parseInt(maybeBlockNumber, 10))
-    ? "latest"
-    : parseInt(maybeBlockNumber);
-
-  let block = await provider.getBlock(blockToQuery);
-
   const startTime = performance.now();
 
   // ---------------------------------
@@ -31,7 +15,8 @@ const process = async () => {
   // ---------------------------------
   // Navigation
   // ---------------------------------
-  render(".js--navigation", nav({ block }));
+  const navigation = new Navigation(".js--navigation");
+  await navigation.init();
 
   // ---------------------------------
   // Content block: Block info
