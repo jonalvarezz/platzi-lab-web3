@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
-import { shortenAddress } from "./src/helpers/shorten-address";
 import { formatGasUsed } from "./src/helpers/format-gas-used";
 import { formatGwei } from "./src/helpers/format-gwei";
 import { formatTimestamp } from "./src/helpers/format-timestamp";
@@ -10,9 +9,10 @@ import { calcMedian } from "./src/helpers/calc-median";
 import { contentBlock } from "./src/views/content-block";
 import { contentHeading } from "./src/views/content-heading";
 import { link } from "./src/views/link";
-import { button } from "./src/views/button";
 import { nav } from "./src/views/nav";
 import { descriptionItem } from "./src/views/description-item";
+
+import { Header } from "./src/controllers/header.controller";
 
 const process = async () => {
   const provider = window.ethereum
@@ -36,38 +36,8 @@ const process = async () => {
   // ---------------------------------
   // Header
   // ---------------------------------
-  const isMetaMask = window.ethereum?.isMetaMask;
-  const connectedTo = `Conectado a ${networkInfo.name} con ${
-    isMetaMask ? "Metamask" : "Cloudflare"
-  }`;
-  const canLogin = isMetaMask;
-  const buttonStr = button({
-    className: !canLogin ? "hidden" : "",
-    children: "Conectar Wallet",
-  });
-
-  const header = render(
-    ".js--header",
-    `<div>${connectedTo}</div>
-${buttonStr}
-<span class="hidden"></span>`
-  );
-
-  const loginBtn = header.querySelector("button");
-  loginBtn.addEventListener("click", async () => {
-    if (!isMetaMask) {
-      return;
-    }
-    try {
-      const accounts = await provider.send("eth_requestAccounts");
-      loginBtn.classList.add("hidden");
-      const span = header.querySelector("span");
-      span.classList.remove("hidden");
-      span.innerText = `Hola, ${shortenAddress(accounts[0])}`;
-    } catch (error) {
-      console.log("[ wallet ] Acceso denegado");
-    }
-  });
+  const header = new Header(".js--header");
+  await header.init();
 
   // ---------------------------------
   // Navigation
