@@ -26,7 +26,6 @@ Serás evaluado por los siguientes puntos:
 
 1. Identificar problemas causado por la forma en como está escrito el código.
 1. Utilizar fundamentos de programación funcional para mejorarlo.
-1. Solucionar
 1. Adoptar una estructura más clara y escalable. Por ejemplo: patrón MVC. Programación orientada a objetos o ES Modules son bienvenidos.
 1. Puedes migrar el proyecto a frameworks más populares como Vite, React ó Angular. Recibirás más puntos si lo haces en vanilla JavaScript.
 1. [opcional] Solucionar el botón de navegación "Bloque anterior".
