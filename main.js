@@ -3,34 +3,36 @@ import { Block } from "./src/controllers/block.controller";
 import { Navigation } from "./src/controllers/navigation.controller";
 import { Transactions } from "./src/controllers/transactions.controller";
 
+import { App } from "./src/controllers/app.controller";
+
 const process = async () => {
   const startTime = performance.now();
 
-  // ---------------------------------
-  // Header
-  // ---------------------------------
-  const header = new Header(".js--header");
-  await header.init();
+  const app = new App({
+    // ---------------------------------
+    // Header
+    // ---------------------------------
+    ".js--header": Header,
 
-  // ---------------------------------
-  // Navigation
-  // ---------------------------------
-  const navigation = new Navigation(".js--navigation");
-  await navigation.init();
+    // ---------------------------------
+    // Navigation
+    // ---------------------------------
+    ".js--navigation": Navigation,
 
-  // ---------------------------------
-  // Content block: Block info
-  // ---------------------------------
+    // ---------------------------------
+    // Content block: Block info
+    // ---------------------------------
 
-  const blockContent = new Block(".js--block-info");
-  await blockContent.init();
+    ".js--block-info": Block,
 
-  // ---------------------------------
-  // Content block: Transactions
-  // ---------------------------------
+    // ---------------------------------
+    // Content block: Transactions
+    // ---------------------------------
 
-  const transactions = new Transactions(".js--block-transactions");
-  await transactions.init();
+    ".js--block-transactions": Transactions,
+  });
+
+  await app.init();
 
   const elapsedTime = performance.now() - startTime;
   console.log(`[ app ] Rendered in ${elapsedTime}ms`);
