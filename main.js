@@ -1,18 +1,16 @@
 import { ethers } from "ethers";
 
 import { render } from "./src/helpers/render";
-import { formatGasUsed } from "./src/helpers/format-gas-used";
 import { formatGwei } from "./src/helpers/format-gwei";
-import { formatTimestamp } from "./src/helpers/format-timestamp";
 import { calcMedian } from "./src/helpers/calc-median";
 
 import { contentBlock } from "./src/views/content-block";
 import { contentHeading } from "./src/views/content-heading";
-import { link } from "./src/views/link";
 import { nav } from "./src/views/nav";
 import { descriptionItem } from "./src/views/description-item";
 
 import { Header } from "./src/controllers/header.controller";
+import { Block } from "./src/controllers/block.controller";
 
 const process = async () => {
   const provider = window.ethereum
@@ -28,8 +26,6 @@ const process = async () => {
   let block = await provider.getBlock(blockToQuery);
 
   const blockNumber = block.number;
-
-  const networkInfo = await provider.getNetwork();
 
   const startTime = performance.now();
 
@@ -48,42 +44,8 @@ const process = async () => {
   // Content block: Block info
   // ---------------------------------
 
-  const heading = contentHeading({
-    title: blockNumber,
-    description: `Bloque de la cadena Ethereum en la red "${networkInfo.name}". Dirección ENS
-  "${networkInfo.ensAddress}"`,
-  });
-
-  // content list
-  const list = [
-    { description: block.hash, title: "Hash" },
-    {
-      description: link({
-        children: block.miner,
-        href: `https://etherscan.io/address/${block.miner}`,
-      }),
-      title: "Minado por",
-    },
-    { description: block.nonce, title: "Nonce" },
-    { description: block.parentHash, title: "Hash padre" },
-    {
-      description: formatGasUsed(block.gasUsed, block.gasLimit),
-      title: "Gas usado",
-    },
-    { description: formatTimestamp(block.timestamp), title: "Timestamp" },
-  ];
-
-  const blockContent = list
-    .map(({ title, description }) => descriptionItem({ title, description }))
-    .join("");
-
-  const blockInfo = contentBlock({
-    name: "block-info",
-    heading,
-    listItems: blockContent,
-  });
-
-  render(".js--block-info", blockInfo);
+  const blockContent = new Block(".js--block-info");
+  await blockContent.init();
 
   // ---------------------------------
   // Content block: Transactions
