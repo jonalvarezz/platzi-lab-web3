@@ -31,6 +31,8 @@ const process = async () => {
 
   const networkInfo = await provider.getNetwork();
 
+  const startTime = performance.now();
+
   // ---------------------------------
   // Header
   // ---------------------------------
@@ -101,10 +103,9 @@ ${buttonStr}
     { description: formatTimestamp(block.timestamp), title: "Timestamp" },
   ];
 
-  let blockContent = "";
-  list.forEach(({ title, description }) => {
-    blockContent += descriptionItem({ title, description });
-  });
+  const blockContent = list
+    .map(({ title, description }) => descriptionItem({ title, description }))
+    .join("");
 
   const blockInfo = contentBlock({
     name: "block-info",
@@ -118,6 +119,13 @@ ${buttonStr}
   // Content block: Transactions
   // ---------------------------------
 
+  let numberOfTransactions = 3; // Limit it to 10 transactions
+  const transactionPromises = block.transactions
+    .filter((_, index) => index < numberOfTransactions)
+    .map((tx) => provider.getTransaction(tx));
+
+  const resolvedTransactions = await Promise.all(transactionPromises);
+
   const transactionList = [
     {
       title: "Número de transacciones",
@@ -126,70 +134,38 @@ ${buttonStr}
   ];
 
   // Precio del gas mas alto
-  let highestPaidGas = 0;
-  let numberOfTransactions = 3; // Limit it to 10 transactions
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-
-    if (transactionInfo.gasPrice.toNumber() > highestPaidGas) {
-      highestPaidGas = transactionInfo.gasPrice.toNumber();
-    }
-
-    numberOfTransactions--;
-  }
+  const transactionsSortedByGasPrice = resolvedTransactions.sort(
+    (a, b) => b.gasPrice.toNumber() - a.gasPrice.toNumber()
+  );
+  const highestPaidGas = transactionsSortedByGasPrice[0].gasPrice.toNumber();
   transactionList.push({
     description: formatGwei(highestPaidGas),
     title: "Precio del gas más alto",
   });
 
   // Precio del gas mas bajo
-  let lowestPaidGas = block.gasLimit.toNumber();
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-
-    if (
-      lowestPaidGas > 0 &&
-      transactionInfo.gasPrice.toNumber() < lowestPaidGas
-    ) {
-      lowestPaidGas = transactionInfo.gasPrice.toNumber();
-    }
-
-    numberOfTransactions--;
-  }
+  const lowestPaidGas =
+    transactionsSortedByGasPrice[
+      transactionsSortedByGasPrice.length - 1
+    ].gasPrice.toNumber();
   transactionList.push({
     description: formatGwei(lowestPaidGas),
     title: "Precio del gas más bajo",
   });
 
   // Median gas price
-  numberOfTransactions = 3; // Limit it to 10 transactions
-  const gasPricesList = [];
-  for (const transaction of block.transactions) {
-    if (numberOfTransactions === 0) {
-      break;
-    }
-    const transactionInfo = await provider.getTransaction(transaction);
-    gasPricesList.push(transactionInfo.gasPrice.toNumber());
-
-    numberOfTransactions--;
-  }
-  const paidGasMedian = calcMedian(gasPricesList);
+  const paidGasMedian = calcMedian(transactionsSortedByGasPrice, {
+    sorted: true,
+    valueResolver: (item) => item.gasPrice.toNumber(),
+  });
   transactionList.push({
     description: formatGwei(paidGasMedian),
     title: "Media",
   });
 
-  let transactionsContent = "";
-  transactionList.forEach(({ title, description }) => {
-    transactionsContent += descriptionItem({ title, description });
-  });
+  const transactionsContent = transactionList
+    .map(({ title, description }) => descriptionItem({ title, description }))
+    .join("");
 
   const transactions = contentBlock({
     name: "transactions",
@@ -201,6 +177,9 @@ ${buttonStr}
   });
 
   render(".js--block-transactions", transactions);
+
+  const elapsedTime = performance.now() - startTime;
+  console.log(`[ app ] Rendered in ${elapsedTime}ms`);
 };
 
 process();
