@@ -9,9 +9,11 @@ import { chevronLeft } from "./icons/chevron-left";
  * @returns string
  */
 export function nav({ block }) {
+  const number = block.number;
+
   return `
 ${navItem({
-  href: "/fixme",
+  href: `/${number - 1}`,
   children: `${chevronLeft()}
   <span class="">Bloque Anterior</span>`,
 })}
