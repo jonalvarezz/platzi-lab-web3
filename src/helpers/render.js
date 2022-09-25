@@ -2,7 +2,7 @@
  * Render `content` in the first found element that matched the `selector`.
  *
  * @param {string} selector - valid CSS selector
- * @param {string} content - HTML string to be rendered
+ * @param {string | HTMLElement | Array<HTMLElement>} content - HTML to be rendered
  */
 export function render(selector, content) {
   const element = document.querySelector(selector);
@@ -13,7 +13,19 @@ export function render(selector, content) {
     );
   }
 
-  element.innerHTML = content;
+  if (typeof content === "string") {
+    element.innerHTML = content;
+  }
+
+  if (Array.isArray(content)) {
+    element.innerHTML = "";
+    element.append(...content);
+  }
+
+  if (content instanceof HTMLElement) {
+    element.innerHTML = "";
+    element.append(content);
+  }
 
   return element;
 }
