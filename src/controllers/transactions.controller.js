@@ -26,39 +26,25 @@ export class Transactions {
 
   render() {
     const block = this.block;
-    const transactions = this.transactions;
 
     const transactionList = [
       {
         title: "Número de transacciones",
         description: block.transactions.length,
       },
+      {
+        description: this.getHighestPaidGas(),
+        title: "Precio del gas más alto",
+      },
+      {
+        description: this.getLowestPaidGas(),
+        title: "Precio del gas más bajo",
+      },
+      {
+        description: this.getMedianPaidGas(),
+        title: "Media",
+      },
     ];
-
-    // Precio del gas mas alto
-    const highestPaidGas = transactions[0].gasPrice.toNumber();
-    transactionList.push({
-      description: formatGwei(highestPaidGas),
-      title: "Precio del gas más alto",
-    });
-
-    // Precio del gas mas bajo
-    const lowestPaidGas =
-      transactions[transactions.length - 1].gasPrice.toNumber();
-    transactionList.push({
-      description: formatGwei(lowestPaidGas),
-      title: "Precio del gas más bajo",
-    });
-
-    // Median gas price
-    const paidGasMedian = calcMedian(transactions, {
-      sorted: true,
-      valueResolver: (item) => item.gasPrice.toNumber(),
-    });
-    transactionList.push({
-      description: formatGwei(paidGasMedian),
-      title: "Media",
-    });
 
     const transactionsContent = transactionList
       .map(({ title, description }) => descriptionItem({ title, description }))
@@ -82,5 +68,27 @@ export class Transactions {
     return transactions.sort(
       (a, b) => b.gasPrice.toNumber() - a.gasPrice.toNumber()
     );
+  }
+
+  getHighestPaidGas() {
+    const highestPaidGas = this.transactions[0].gasPrice.toNumber();
+
+    return formatGwei(highestPaidGas);
+  }
+
+  getLowestPaidGas() {
+    const lowestPaidGas =
+      this.transactions[this.transactions.length - 1].gasPrice.toNumber();
+
+    return formatGwei(lowestPaidGas);
+  }
+
+  getMedianPaidGas() {
+    const paidGasMedian = calcMedian(this.transactions, {
+      sorted: true,
+      valueResolver: (item) => item.gasPrice.toNumber(),
+    });
+
+    return formatGwei(paidGasMedian);
   }
 }
